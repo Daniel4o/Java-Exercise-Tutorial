@@ -26,11 +26,16 @@ public class Point {
     }
 
     public double distance() {
-        return this.x-this.y;
+
+        return Math.sqrt(this.x*this.x+this.y*this.y);
     }
 
-    public double distance(double x, double y) {
-        return x-y;
+    public double distance(int x, int y) {
+        return Math.sqrt(Math.pow(this.x-x,2)+Math.pow(this.y-y,2));
+    }
+
+    public double distance(Point pointB) {
+        return Math.sqrt(Math.pow(this.x-pointB.x,2)+Math.pow(this.y-pointB.y,2));
     }
 
 }
