@@ -1,10 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-package com.timbuchalka;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
