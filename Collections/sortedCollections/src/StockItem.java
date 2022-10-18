@@ -55,7 +55,7 @@ public class StockItem implements Comparable<StockItem> {
         return 0;
    }
 
-   public int finalize(int quantity) {
+   public int finalizeStock(int quantity) {
         if(quantity <= reserved) {
             quantityInStock -= quantity;
             reserved -= quantity;
@@ -65,7 +65,7 @@ public class StockItem implements Comparable<StockItem> {
    }
 
     public boolean equals(Object obj) {
-        System.out.println("Entering StockItem.equals");
+      //  System.out.println("Entering StockItem.equals");
         if(obj == this) return true;
         if(obj == null || (obj.getClass() != this.getClass()))
             return false;
