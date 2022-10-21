@@ -3,8 +3,10 @@ package com.example.todolist;
 
 import com.example.todolist.datamodel.TodoData;
 import com.example.todolist.datamodel.TodoItem;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class HelloController {
 
@@ -45,6 +48,11 @@ public class HelloController {
 
     @FXML
     private ToggleButton filterToggleButton;
+
+    private FilteredList<TodoItem> filteredList;
+
+    private Predicate<TodoItem> wantAllItems;
+    private Predicate<TodoItem> wantTodaysItems;
 
     public void initialize() {
         listContextMenu = new ContextMenu();
@@ -70,9 +78,25 @@ public class HelloController {
                 }
             }
         });
+        // Filtering on button selected for today's deadline items and all items
+        wantAllItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return true;
+            }
+        };
+
+        wantTodaysItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return (todoItem.getDeadline().equals(LocalDate.now()));
+            }
+        };
+
+        filteredList = new FilteredList<TodoItem>(TodoData.getInstance().getTodoItems(), wantAllItems);
 
         // Sorting the todolist items by date. Using Comparator to compare the items
-        SortedList<TodoItem> sortedList = new SortedList<TodoItem>(TodoData.getInstance().getTodoItems(),
+        SortedList<TodoItem> sortedList = new SortedList<TodoItem>(filteredList,
                 new Comparator<TodoItem>() {
                     @Override
                     public int compare(TodoItem o1, TodoItem o2) {
@@ -98,12 +122,21 @@ public class HelloController {
                             setText(todoItem.getShortDescription());
 
                             // If the due dated was passed or it's due today
-                            if(todoItem.getDeadline().isBefore(LocalDate.now().plusDays(1))) {
+                            if(todoItem.getDeadline().isBefore(LocalDate.now())) {
+                                setTextFill(Color.PURPLE);
+                            }
+                            else if(todoItem.getDeadline().isEqual(LocalDate.now())) {
                                 setTextFill(Color.RED);
                             }
                             // If the todolist due date is till tomorrow
-                                else if(todoItem.getDeadline().equals(LocalDate.now().plusDays(1))) {
-                                  setTextFill(Color.BROWN);
+                                else if(todoItem.getDeadline().isEqual(LocalDate.now().plusDays(1))) {
+                                  setTextFill(Color.YELLOW);
+                            }
+////                                else if(todoItem.getDeadline().compareTo(LocalDate.now().plusWeeks(1)))
+////                                    setTextFill(Color.GREEN);
+//                            }
+                                else {
+                                    setTextFill(Color.BLUE);
                             }
                         }
 
@@ -120,7 +153,6 @@ public class HelloController {
                             if (isNowEmpty) cell.setContextMenu(null);
                             else cell.setContextMenu(listContextMenu);
                         });
-
                 return cell;
             }
         });
@@ -136,7 +168,6 @@ public class HelloController {
         fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
-
         } catch(IOException e) {
             System.out.println("Couldn't load the dialog");
             e.printStackTrace();
@@ -150,7 +181,18 @@ public class HelloController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             DialogController controller = fxmlLoader.getController();
             TodoItem  newItem = controller.processResults();
-            todoListView.getSelectionModel().select(newItem);
+
+            if(newItem.getDeadline() == null || newItem.getShortDescription() == null) {
+               Alert alert = new Alert(Alert.AlertType.WARNING);
+               alert.setTitle("Validate Fields!");
+               alert.setHeaderText(null);
+               alert.setContentText("Please enter a description and date!");
+               alert.showAndWait();
+               showNewItemDialog();
+            }
+            else {
+                todoListView.getSelectionModel().select(newItem);
+            }
         }
     }
 
@@ -186,12 +228,33 @@ public class HelloController {
        }
    }
 
-   public void handleFilterButton() {
+   // Setting the view based on condition.
+   @FXML
+    public void handleFilterButton() {
+        TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
        if(filterToggleButton.isSelected()) {
-
+            filteredList.setPredicate(wantTodaysItems);
+            if(filteredList.isEmpty()) {
+                itemDetailsTextArea.clear();
+                deadlineLabel.setText("");
+            }
+            // If selected item on all item's is also in the today's list select it after the toggle
+            else if(filteredList.contains(selectedItem)) {
+                todoListView.getSelectionModel().select(selectedItem);
+            }
+            // else item selected in all items is not in today's items.
+            // Show the first item in today's list
+            else {
+                todoListView.getSelectionModel().selectFirst();
+            }
        }
        else {
-
+           filteredList.setPredicate(wantAllItems);
+           todoListView.getSelectionModel().select(selectedItem);
        }
+   }
+   @FXML
+    public void handleExit() {
+        Platform.exit();
    }
 }

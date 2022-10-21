@@ -35,6 +35,7 @@ public class TodoItem {
     }
 
     public void setDeadline(LocalDate deadline) {
+        if(deadline != null)
         this.deadline = deadline;
     }
 
