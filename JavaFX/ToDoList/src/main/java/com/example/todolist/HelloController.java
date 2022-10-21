@@ -5,13 +5,22 @@ import com.example.todolist.datamodel.TodoData;
 import com.example.todolist.datamodel.TodoItem;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +40,25 @@ public class HelloController {
     @FXML
     private BorderPane mainBorderPane;
 
+    @FXML
+    private ContextMenu listContextMenu;
+
+    @FXML
+    private ToggleButton filterToggleButton;
+
     public void initialize() {
+        listContextMenu = new ContextMenu();
+        // Creating the delete menu item and associate an event handler with it
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                TodoItem item = todoListView.getSelectionModel().getSelectedItem();
+                deleteItem(item);
+            }
+        });
+        // Adding the delete item menu item itself to context menu
+        listContextMenu.getItems().addAll(deleteMenuItem);
         todoListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TodoItem>() {
             @Override
             public void changed(ObservableValue<? extends TodoItem> observableValue, TodoItem todoItem, TodoItem t1) {
@@ -44,9 +71,59 @@ public class HelloController {
             }
         });
 
-        todoListView.getItems().setAll(TodoData.getInstance().getTodoItems());
+        // Sorting the todolist items by date. Using Comparator to compare the items
+        SortedList<TodoItem> sortedList = new SortedList<TodoItem>(TodoData.getInstance().getTodoItems(),
+                new Comparator<TodoItem>() {
+                    @Override
+                    public int compare(TodoItem o1, TodoItem o2) {
+                        return o1.getDeadline().compareTo(o2.getDeadline());
+                    }
+                });
+         // Ordering by creation
+      //  todoListView.setItems(TodoData.getInstance().getTodoItems());
+        // Ordering by date
+        todoListView.setItems(sortedList);
         todoListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoListView.getSelectionModel().selectFirst();
+
+        todoListView.setCellFactory(new Callback<ListView<TodoItem>, ListCell<TodoItem>>() {
+            @Override
+            public ListCell<TodoItem> call(ListView<TodoItem> todoItemListView) {
+                ListCell<TodoItem> cell = new ListCell<TodoItem>() {
+                    @Override
+                    protected void updateItem(TodoItem todoItem, boolean b) {
+                        super.updateItem(todoItem, b);
+                        if(b) setText(null);
+                        else {
+                            setText(todoItem.getShortDescription());
+
+                            // If the due dated was passed or it's due today
+                            if(todoItem.getDeadline().isBefore(LocalDate.now().plusDays(1))) {
+                                setTextFill(Color.RED);
+                            }
+                            // If the todolist due date is till tomorrow
+                                else if(todoItem.getDeadline().equals(LocalDate.now().plusDays(1))) {
+                                  setTextFill(Color.BROWN);
+                            }
+                        }
+
+                    }
+                };
+
+                // Adding a delete menu (right click) and associating
+                // the menu with the listview
+                // The item will be automatically deleted (without using code)
+                // this is because we're using data binding
+                // Using anonymous method  (lambda function)
+                cell.emptyProperty().addListener(
+                        (obs,wasEmpty,isNowEmpty) -> {
+                            if (isNowEmpty) cell.setContextMenu(null);
+                            else cell.setContextMenu(listContextMenu);
+                        });
+
+                return cell;
+            }
+        });
     }
 
     @FXML
@@ -73,11 +150,19 @@ public class HelloController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             DialogController controller = fxmlLoader.getController();
             TodoItem  newItem = controller.processResults();
-            todoListView.getItems().setAll(TodoData.getInstance().getTodoItems());
             todoListView.getSelectionModel().select(newItem);
-            System.out.println("OK pressed");
-        } else {
-            System.out.println("Cancel pressed");
+        }
+    }
+
+    // Adding a delete option when Delete key is clicked
+    @FXML
+    public void handleKeyPressed(KeyEvent keyEvent) {
+        TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
+        // If Delete key is pressed
+        if(selectedItem != null) {
+            if(keyEvent.getCode().equals(KeyCode.DELETE)) {
+                deleteItem(selectedItem);
+            }
         }
     }
 
@@ -86,10 +171,27 @@ public class HelloController {
         TodoItem item = todoListView.getSelectionModel().getSelectedItem();
         itemDetailsTextArea.setText(item.getDetails());
         deadlineLabel.setText(item.getDeadline().toString());
-//        System.out.println("The selected item is " + item);
-//            sb.append("\n\n\n\n");
-//        sb.append("Due: ");
-//        sb.append(item.getDeadline().toString());
-//        itemDetailsTextArea.setText(sb.toString());
     }
+
+   public void deleteItem(TodoItem item) {
+        // Adding confirmation dialog
+       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+       alert.setTitle("Delete Todo Item");
+       alert.setHeaderText("Delete item: " + item.getShortDescription());
+       alert.setContentText("Are you sure? Press OK to confirm, or cancel to Back out.");
+       Optional<ButtonType> result = alert.showAndWait();
+
+       if(result.isPresent() && (result.get() == ButtonType.OK)) {
+           TodoData.getInstance().deleteTodoItem(item);
+       }
+   }
+
+   public void handleFilterButton() {
+       if(filterToggleButton.isSelected()) {
+
+       }
+       else {
+
+       }
+   }
 }
