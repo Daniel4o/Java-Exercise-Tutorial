@@ -123,20 +123,19 @@ public class HelloController {
 
                             // If the due dated was passed or it's due today
                             if(todoItem.getDeadline().isBefore(LocalDate.now())) {
-                                setTextFill(Color.PURPLE);
+                                setTextFill(Color.GRAY);
                             }
+                            // If due date is today
                             else if(todoItem.getDeadline().isEqual(LocalDate.now())) {
                                 setTextFill(Color.RED);
                             }
                             // If the todolist due date is till tomorrow
                                 else if(todoItem.getDeadline().isEqual(LocalDate.now().plusDays(1))) {
-                                  setTextFill(Color.YELLOW);
+                                setTextFill(Color.YELLOW);
                             }
-////                                else if(todoItem.getDeadline().compareTo(LocalDate.now().plusWeeks(1)))
-////                                    setTextFill(Color.GREEN);
-//                            }
+                                // If due date is more than one day
                                 else {
-                                    setTextFill(Color.BLUE);
+                                    setTextFill(Color.GREEN);
                             }
                         }
 
@@ -182,7 +181,7 @@ public class HelloController {
             DialogController controller = fxmlLoader.getController();
             TodoItem  newItem = controller.processResults();
 
-            if(newItem.getDeadline() == null || newItem.getShortDescription() == null) {
+            if(newItem.getDeadline() == null || newItem.getShortDescription().isBlank()) {
                Alert alert = new Alert(Alert.AlertType.WARNING);
                alert.setTitle("Validate Fields!");
                alert.setHeaderText(null);
