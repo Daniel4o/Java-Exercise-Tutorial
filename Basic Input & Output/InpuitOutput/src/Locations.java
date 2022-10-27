@@ -2,21 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer,Location> {
-    private static Map<Integer, Location> locations = new HashMap<Integer,Location>();
+    private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
-
-        //Try with resources
-        try(FileWriter locFile = new FileWriter("locations.txt");
-            FileWriter dirFile = new FileWriter("directions.txt")) {
+//        try (DataOutputStream locFile = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("locations.dat")))){;
+//            for(Location location : locations.values()) {
+//                locFile.writeInt(location.getLocationID());
+//                locFile.writeUTF(location.getDescription());
+//                System.out.println("Writing location " + location.getLocationID() + " : " + location.getDescription());
+//                System.out.println("Writing " + (location.getExits().size()-1) + " exits.");
+//                locFile.writeInt(location.getExits().size()-1);
+//                for(String direction : location.getExits().keySet()) {
+//                    if(!direction.equalsIgnoreCase("Q")) {
+//                        System.out.println("\t\t" + direction + "," + location.getExits().get(direction));
+//                        locFile.writeUTF(direction);
+//                        locFile.writeInt(location.getExits().get(direction));
+//                    }
+//                }
+//            }
+        try (ObjectOutputStream locFile = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("locations.dat")))) {
             for(Location location : locations.values()) {
-                locFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
-                for(String direction : location.getExits().keySet()) {
-                    dirFile.write(location.getLocationID() + "," + direction + "," + location.getExits().get(direction) + "\n");
-                }
-            }
+            locFile.writeObject(location);
         }
+    }
 
+
+
+    //Try with resources
+//        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("locations.txt"));
+//             BufferedWriter dirFile = new BufferedWriter(new FileWriter("directions.txt"))) {
+//            for (Location location : locations.values()) {
+//                locFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
+//                for (String direction : location.getExits().keySet()) {
+//                    if (!direction.equalsIgnoreCase("Q")) {
+//                        dirFile.write(location.getLocationID() + "," + direction + "," + location.getExits().get(direction) + "\n");
+//                    }
+//                }
+//            }
+//        }
+//
 //        FileWriter locFile = null;
 //        try {
 //            locFile = new FileWriter("locations.txt");
@@ -30,61 +54,95 @@ public class Locations implements Map<Integer,Location> {
 //                    System.out.println("Attempting to close locfile");
 //                }
 //        }
-    }
 
+}
     // Buffer Reader reads text from the input stream and buffer the characters into
     // a character array
 
     static {
-        Scanner scanner = null;
-        try {
-           scanner = new Scanner(new FileReader("locations.txt"));
-           // Tells the scanner that the information is separated by comma
-           scanner.useDelimiter(",");
-           while(scanner.hasNextLine()) {
-               int loc = scanner.nextInt();
-               // Skip over the comma to move to the next section
-               scanner.skip(scanner.delimiter());
-               String description = scanner.nextLine();
-               System.out.println("Imported loc: " + loc + ": " + description);
-                Map<String, Integer> tempExit = new HashMap<>();
-                locations.put(loc, new Location(loc,description, tempExit));
-           }
-        } catch(IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(scanner != null)
-                // When closing Scanner the close method also takes care of closing any readable
-                // that it was using, that the readable object implements the closable interface
-                // The method close() in Scanner checks if it's source is instacnceof
-                scanner.close();
+
+//        try(DataInputStream locFile = new DataInputStream(new BufferedInputStream(new FileInputStream("locations.dat")))) {
+        try(ObjectInputStream locFile = new ObjectInputStream(new BufferedInputStream(new FileInputStream("locations.dat")))) {
+            boolean eof = false;
+            while (!eof) {
+                try {
+                    Location location = (Location) locFile.readObject();
+                    System.out.println("Read location " + location.getLocationID() + ": " + location.getDescription());
+                    System.out.println("Found " + location.getExits().size() + " exits");
+
+                    locations.put(location.getLocationID(), location);
+                } catch (EOFException e) {
+                    eof = true;
+                }
+            }
+        } catch(IOException io ) {
+            System.out.println("IO Exception " + io.getMessage());
+        } catch(ClassNotFoundException e) {
+            System.out.println("ClassNotFoundException " + e.getMessage());
+
+//            while (!eof) {
+//                try {
+//                    Map<String, Integer> exits = new LinkedHashMap<>();
+//                    int locID = locFile.readInt();
+//                    String description = locFile.readUTF();
+//                    int numExits = locFile.readInt();
+//                    System.out.println("Read location " + locID + " : " + description);
+//                    System.out.println("Found" + numExits + " exits");
+//                    for (int i = 0; i < numExits; i++) {
+//                        String direction = locFile.readUTF();
+//                        int destination = locFile.readInt();
+//                        exits.put(direction, destination);
+//                        System.out.println("\t\t" + direction + "," + destination);
+//                    }
+//                    locations.put(locID, new Location(locID, description, exits));
+//                } catch(EOFException e) {
+//                    eof = true;
+//                }
+//            }
+//        } catch(IOException io) {
+//                System.out.println("IO Exception");
         }
 
-        // Now read the exits
-      try {
-          scanner = new Scanner(new BufferedReader(new FileReader("directions.txt")));
-          scanner.useDelimiter(",");
-          while(scanner.hasNextLine()) {
-//              int loc = scanner.nextInt();
-//              String direction = scanner.next();
-//              scanner.skip(scanner.delimiter());
-              // Reading the final number as a string using nextLine()
-              // Because there's no comma delimiter to tell the scanner to stop reading it
-              String input = scanner.nextLine();
-              String[] data = input.split(",");
-              int loc = Integer.parseInt(data[0]);
-              String direction = data[1];
-              int destination = Integer.parseInt(data[2]);
-
-              System.out.println(loc + ": " + direction + ": " + destination);
-              Location location = locations.get(loc);
-              location.addExit(direction,destination);
-          }
-          } catch(IOException e) {
-          e.printStackTrace();
-      } finally {
-          if(scanner !=null) scanner.close();
-      }
+//        // Using BufferedReader because the data will be read in chunks which is more optimizing
+//        // than reading a character at a time
+//        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations_big.txt")))) {
+//        // Tells the scanner that the information is separated by comma
+//        scanner.useDelimiter(",");
+//        while (scanner.hasNextLine()) {
+//            int loc = scanner.nextInt();
+//            // Skip over the comma to move to the next section
+//            scanner.skip(scanner.delimiter());
+//            String description = scanner.nextLine();
+//            System.out.println("Imported loc: " + loc + ": " + description);
+//            Map<String, Integer> tempExit = new HashMap<>();
+//            locations.put(loc, new Location(loc, description, tempExit));
+//        }
+//    } catch (IOException e) {
+//        e.printStackTrace();
+//    }
+//
+//
+//        // Now read the exits
+//      try (BufferedReader dirFile = new BufferedReader(new FileReader("directions_big.txt"))){;
+//          String input;
+//          while((input = dirFile.readLine()) != null) {
+////              int loc = scanner.nextInt();
+////              String direction = scanner.next();
+////              scanner.skip(scanner.delimiter());
+//              // Reading the final number as a string using nextLine()
+//              // Because there's no comma delimiter to tell the scanner to stop reading it
+//              String[] data = input.split(",");
+//              int loc = Integer.parseInt(data[0]);
+//              String direction = data[1];
+//              int destination = Integer.parseInt(data[2]);
+//
+//              System.out.println(loc + ": " + direction + ": " + destination);
+//              Location location = locations.get(loc);
+//              location.addExit(direction,destination);
+//          }
+//      } catch(IOException e) {
+//          e.printStackTrace();
+//      }
 
 //        Map<String,Integer> tempExit = new HashMap<String,Integer>();
 //        locations.put(0, new Location(0, "You are sitting in front of a computer learning Java",tempExit));
@@ -113,7 +171,7 @@ public class Locations implements Map<Integer,Location> {
 //        tempExit.put("S", 1);
 //        tempExit.put("W", 2);
 //        locations.put(5, new Location(5, "You are in the forest",tempExit));
-    }
+}
 
     @Override
     public int size() {
