@@ -13,22 +13,41 @@ class Message {
     private String message;
     private boolean empty = true;
 
+    // Method used by reader
+    // Reader reads the message when it is not empty otherwise
+    // it will wait for the Writer to write the message
     public synchronized String read() {
         while(empty) {
             try {
+                /*
+                 Reader thread waits until Writer invokes the notify()
+                 method or the notifyAll() method for 'message' object.
+                 Reader thread releases ownership of lock and waits
+                 until Writer thread notifies Reader thread waiting on
+                 this object's lock to wake up either through a call to
+                 the notify method or the notifyAll method.
+                 */
                 wait();
             } catch(InterruptedException e) {
 
             }
         }
-        empty = true;
+        empty = true; // Reader reads the message and marks empty as true.
         notifyAll();
+        /*
+        Wakes up all threads that are waiting on 'message' object's monitor(lock).
+        This thread(Reader) releases the lock for 'message' object.
+        */
         return message;
     }
 
+    // Method use by writer
+    // Writer writes the message when it is empty else it waits for
+    // Reader to read the message and marks the message empty
     public synchronized void write(String message) {
         while(!empty) {
             try{
+                // Here wait() does the same for writer
                 wait();
             } catch(InterruptedException e) {
 
