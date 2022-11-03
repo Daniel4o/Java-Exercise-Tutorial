@@ -8,17 +8,13 @@ public class Main {
     public static final String EOF = "EOF";
 
     public static void main(String[] args) {
-        List<String> buffer = new ArrayList<String>();
-        ReentrantLock bufferLock = new ReentrantLock();
+        ArrayBlockingQueue<String> buffer = new ArrayBlockingQueue<String>(6);
 
-        // Thread pool is used when we want to execute multiply tasks at the same time.
-        // The tasks are submitted to the Thread pool with a number of pre-created Threads
-        // which then execute the tasks one by one. We can control how many threads are active at the same time
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        MyProducer producer = new MyProducer(buffer,ThreadColor.ANSI_YELLOW, bufferLock);
-        MyConsumer consumer1 = new MyConsumer(buffer, ThreadColor.ANSI_PURPLE, bufferLock);
-        MyConsumer consumer2 = new MyConsumer(buffer, ThreadColor.ANSI_CYAN, bufferLock);
+        MyProducer producer = new MyProducer(buffer,ThreadColor.ANSI_YELLOW);
+        MyConsumer consumer1 = new MyConsumer(buffer, ThreadColor.ANSI_PURPLE);
+        MyConsumer consumer2 = new MyConsumer(buffer, ThreadColor.ANSI_CYAN);
 
         executorService.execute(producer);
         executorService.execute(consumer1);
@@ -47,14 +43,12 @@ public class Main {
 }
 
 class MyProducer implements Runnable {
-    private List<String> buffer;
+    private ArrayBlockingQueue<String> buffer;
     private String color;
-    private ReentrantLock bufferLock;
 
-    public MyProducer(List<String> buffer, String color, ReentrantLock bufferLock) {
+    public MyProducer(ArrayBlockingQueue<String> buffer, String color) {
         this.buffer = buffer;
         this.color = color;
-        this.bufferLock = bufferLock;
     }
 
     public void run() {
@@ -64,12 +58,7 @@ class MyProducer implements Runnable {
         for(String num:nums) {
             try {
                 System.out.println(color + "Adding..." + num);
-                bufferLock.lock();
-                try {
-                buffer.add(num);
-                } finally {
-                bufferLock.unlock();
-                }
+                buffer.put(num);
 
                 Thread.sleep(random.nextInt(1000));
             } catch(InterruptedException e) {
@@ -77,41 +66,39 @@ class MyProducer implements Runnable {
             }
         }
         System.out.println(color + "Adding EOF and exiting...");
-        bufferLock.lock();
         try {
-        buffer.add("EOF");
-        } finally {
-        bufferLock.unlock();
+        buffer.put("EOF");
+        } catch (InterruptedException e) {
+
         }
     }
 }
 
 class MyConsumer implements Runnable {
-    private List<String> buffer;
+    private ArrayBlockingQueue<String> buffer;
     private String color;
-    private ReentrantLock bufferLock;
 
-    public MyConsumer(List<String> buffer, String color, ReentrantLock bufferLock) {
+    public MyConsumer(ArrayBlockingQueue<String> buffer, String color) {
         this.buffer = buffer;
         this.color = color;
-        this.bufferLock = bufferLock;
     }
 
     public void run() {
         while(true) {
-            bufferLock.lock();
-            try {
-                if (buffer.isEmpty()) {
-                    continue;
+            synchronized (buffer) {
+                try {
+                    if (buffer.isEmpty()) {
+                        continue;
+                    }
+                    if (buffer.peek().equals(Main.EOF)) {
+                        System.out.println(color + "Exiting");
+                        break;
+                    } else {
+                        System.out.println(color + "Removed " + buffer.take());
+                    }
+                } catch (InterruptedException e) {
+
                 }
-                if (buffer.get(0).equals(Main.EOF)) {
-                    System.out.println(color + "Exiting");
-                    break;
-                } else {
-                    System.out.println(color + "Removed " + buffer.remove(0));
-                }
-            } finally {
-            bufferLock.unlock();
             }
         }
     }
