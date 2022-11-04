@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PolitWorker.iml" filepath="$PROJECT_DIR$/PolitWorker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lock.iml" filepath="$PROJECT_DIR$/Lock.iml" />
     </modules>
   </component>
 </project>

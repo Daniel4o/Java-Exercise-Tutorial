@@ -30,7 +30,7 @@ public class Worker {
             }
 
             if (otherWorker.isActive()) {
-                System.out.println(getName() + " : give the resource to the worker " + otherWorker);
+                System.out.println(getName() + ": give the resource to the worker " + otherWorker);
                 sharedResource.setOwner(otherWorker);
             }
 

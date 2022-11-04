@@ -14,5 +14,4 @@ public class SharedResource {
         this.owner = owner;
     }
 
-
 }
