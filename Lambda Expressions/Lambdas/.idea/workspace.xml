@@ -4,7 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1bc5e317-6e7e-4b8b-8701-1b51b596bf61" name="Changes" comment="" />
+    <list default="true" id="e1bdcdc5-2c9f-4439-9f3f-4f28a6221e77" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/Concurrency Challenges/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_8_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_8_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_8_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_8_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_base_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_base_win_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_controls_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_controls_win_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_fxml_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_fxml_win_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_graphics_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_openjfx_javafx_graphics_win_19_ea_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Concurrency/TaskExample/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/TaskExample.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/Controller$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/Controller$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/Controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/EmployeeService$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/EmployeeService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/com/example/taskexample/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Concurrency/TaskExample/target/classes/module-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +53,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2HGpCuC3UhYlPwT37UGBG5BTmPT" />
+  <component name="ProjectId" id="2HJ41u8xqTtysRuGa70yRBwxSBH" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -31,20 +61,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1bc5e317-6e7e-4b8b-8701-1b51b596bf61" name="Changes" comment="" />
-      <created>1667921155767</created>
+      <changelist id="e1bdcdc5-2c9f-4439-9f3f-4f28a6221e77" name="Changes" comment="" />
+      <created>1667989642978</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1667921155767</updated>
+      <updated>1667989642978</updated>
     </task>
     <servers />
   </component>
