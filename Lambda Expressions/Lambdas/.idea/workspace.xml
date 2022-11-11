@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e1bdcdc5-2c9f-4439-9f3f-4f28a6221e77" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Streams/out/production/Streams/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Streams/out/production/Streams/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Streams/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Streams/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +37,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Java/projects/tutorial/Lambda Expressions/Lambdas"
+    "last_opened_file_path": "C:/Java/projects/tutorial/Lambda Expressions/Lambda Challenges"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
