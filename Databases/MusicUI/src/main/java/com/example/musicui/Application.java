@@ -16,12 +16,11 @@ public class Application extends javafx.application.Application {
         Parent root = fxmlLoader.load();
         Controller controller = fxmlLoader.getController();
         controller.listArtists();
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Music Database");
         stage.setScene(scene);
         stage.show();
     }
-
 
     @Override
     public void init() throws Exception {

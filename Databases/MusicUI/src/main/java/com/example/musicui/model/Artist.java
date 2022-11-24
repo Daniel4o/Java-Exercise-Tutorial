@@ -13,16 +13,16 @@ public class Artist {
         this.name = new SimpleStringProperty();
     }
 
-    public SimpleIntegerProperty getId() {
-        return id;
+    public int getId() {
+        return id.get();
     }
 
     public void setId(int id) {
         this.id.set(id);
     }
 
-    public SimpleStringProperty getName() {
-        return name;
+    public String getName() {
+        return name.get();
     }
 
     public void setName(String name) {
